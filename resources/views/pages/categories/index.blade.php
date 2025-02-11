@@ -25,6 +25,14 @@
         </script>
     @endif
     <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <div class="table-responsive text-nowrap">
+            <form method="GET" action="/user/index" class="d-flex mt-2 mb-2">
+                <input type="search" name="search" class="form-control mx-2" placeholder="Cari berdasarkan nama" value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary">Cari</button>
+            </form>
+        </div>
+        </div>
         <div class="card-header d-flex justify-content-end">
             <a href="/categories/create" class="btn btn-primary">
                 Tambah Kategori</a>

@@ -1,29 +1,20 @@
-@extends('layouts.main ')
+@extends('layouts.mainuser ')
 
 @section('header')
     <div class="row mb-2">
         <div class="col-sm-6">
-            <h1>Barang</h1>
+            <h1>Dashboard</h1>
+
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="/">Beranda</a></li>
-                <li class="breadcrumb-item active">Barang</li>
+                <li class="breadcrumb-item"><a href="/user  ">Beranda</a></li>
             </ol>
         </div>
     </div>
 @endsection
 
 @section('content')
-    @if (session('success'))
-        <script>
-            Swal.fire({
-                title: "Berhasil!",
-                text: "{{ session('success') }}",
-                icon: "success"
-            });
-        </script>
-    @endif
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <div class="table-responsive text-nowrap">
@@ -32,10 +23,6 @@
                 <button type="submit" class="btn btn-primary">Cari</button>
             </form>
         </div>
-        </div>
-        <div class="card-header d-flex justify-content-end">
-            <a href="/products/create" class="btn btn-primary">
-                Tambah Barang</a>
         </div>
         <table class="table table-bordered text-center">
             <thead class="thead-dark">
@@ -46,7 +33,6 @@
                     <th>Kode</th>
                     <th>Stock</th>
                     <th>Kategori</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,23 +44,19 @@
                         <td>{{ $product->sku }}</td>
                         <td>{{ $product->stock }}</td>
                         <td>{{ $product->category->name }}</td>
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center">
-                                <a href="/products/edit/{{ $product->id }}" class="btn btn-sm btn-warning mr-2">Edit</a>
-                                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                    data-target="#modal-delete-{{ $product->id }}">
-                                    Hapus
-                                </button>
-                            </div>
-                        </td>
                     </tr>
-                    @include('pages.products.delete-confirmasi')
                 @endforeach
             </tbody>
         </table>
-
     </div>
     <div class="card-footer">
+        @php
+
+            use App\Models\Product;
+
+            $products = Product::query();
+            $products = $products->paginate(10);
+        @endphp
         {{ $products->links('pagination::bootstrap-5') }}
     </div>
 @endsection

@@ -2,22 +2,7 @@
     $menus = [
         (object) [
             'title' => 'Dashboard',
-            'path' => '/',
-            'icon' => 'fas fa-th',
-        ],
-        (object) [
-            'title' => 'Barang',
-            'path' => 'products',
-            'icon' => 'fas fa-th',
-        ],
-        (object) [
-            'title' => 'Kategori Barang',
-            'path' => 'categories',
-            'icon' => 'fas fa-th',
-        ],
-        (object) [
-            'title' => 'Peminjam Barang',
-            'path' => 'peminjam',
+            'path' => '/user',
             'icon' => 'fas fa-th',
         ],
     ];
@@ -29,7 +14,7 @@
     <a href="#" class="brand-link">
         <img src="{{ asset('templates/dist/img/logo-cheva.jpg') }}" alt="Cheva Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand  -text font-weight-light">Chevalier lab</span>
+        <span class="brand-text font-weight-light">Chevalier lab</span>
     </a>
 
     <!-- Sidebar -->
@@ -41,7 +26,7 @@
                     alt="User Image"> --}}
             </div>
             <div class="info">
-                <a href="#" class="d-block">{{ auth()->user()->name }}</a>
+                <a href="#" class="d-block">Dzaki Alwan Firjatullah</a>
             </div>
         </div>
 

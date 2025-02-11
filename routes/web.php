@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsLogin;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,9 @@ Route::post('/logout',[AuthController::class ,'logout']);
 
 
 Route::get('/' ,[DashboardController::class ,'index']);
+
+Route::get('/user',[UserController::class ,'userView']);
+Route::get('/user/search',[UserController::class ,'search'])->name('products.search');
 
 
 Route::middleware(IsLogin::class)->group(function(){
