@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PeminjamController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\IsLogin;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,13 @@ Route::get('/products/edit/{id}',[ProductController::class ,'edit']);
 Route::post('/products/store',[ProductController::class ,'store']);
 Route::put('/products/{id}',[ProductController::class ,'update']);
 Route::delete('/products/{id}',[ProductController::class ,'delete']);
+
+Route::get('/peminjam',[PeminjamController::class ,'index']);
+Route::get('/peminjam/create',[PeminjamController::class ,'create']);
+Route::get('/peminjam/edit/{id}',[PeminjamController::class ,'edit']);
+Route::post('/peminjam/store',[PeminjamController::class ,'store']);
+Route::put('/peminjam/{id}',[PeminjamController::class ,'update']);
+Route::delete('/peminjam/{id}',[PeminjamController::class ,'delete']);
 
 
 Route::get('/categories',[CategoryController::class ,'index']);
