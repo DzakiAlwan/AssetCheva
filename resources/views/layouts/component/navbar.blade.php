@@ -16,7 +16,7 @@
             @csrf
             @method('POST') --}}
         <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#modal-logout">
-            LogOut
+            Keluar
         </button>
         {{-- </form> --}}
     </ul>

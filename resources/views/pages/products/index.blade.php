@@ -27,11 +27,11 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <div class="table-responsive text-nowrap">
-            <form method="GET" action="/user/index" class="d-flex mt-2 mb-2">
-                <input type="search" name="search" class="form-control mx-2" placeholder="Cari berdasarkan nama" value="{{ request('search') }}">
-                <button type="submit" class="btn btn-primary">Cari</button>
-            </form>
-        </div>
+                <form method="GET" action="/products" class="d-flex mt-2 mb-2">
+                    <input type="search" name="search" class="form-control mx-2" placeholder="Cari berdasarkan nama" value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                </form>
+            </div>
         </div>
         <div class="card-header d-flex justify-content-end">
             <a href="/products/create" class="btn btn-primary">
@@ -46,6 +46,10 @@
                     <th>Kode</th>
                     <th>Stock</th>
                     <th>Kategori</th>
+                    <th>Status</th>
+                    <th>Tanggal</th>
+                    <th>Sumber</th>
+                    <th>Gambar</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -58,9 +62,19 @@
                         <td>{{ $product->sku }}</td>
                         <td>{{ $product->stock }}</td>
                         <td>{{ $product->category->name }}</td>
+                        <td>{{ $product->status }}</td>
+                        <td>{{ $product->tanggal }}</td>
+                        <td>{{ $product->source }}</td>
+                        <td>
+                            @if($product->image)
+                                <img src="{{ asset('images/' . $product->image) }}" alt="Product Image" style="width: 50px; height: 50px;">
+                            @else
+                                <img src="{{ asset('images/default.png') }}" alt="Default Image" style="width: 50px; height: 50px;">
+                            @endif
+                        </td> <!-- Display image -->
                         <td class="text-center">
                             <div class="d-flex justify-content-center">
-                                <a href="/products/edit/{{ $product->id }}" class="btn btn-sm btn-warning mr-2">Edit</a>
+                                <a href="/products/detail/{{ $product->id }}" class="btn btn-sm btn-warning mr-2">Detail</a>
                                 <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                     data-target="#modal-delete-{{ $product->id }}">
                                     Hapus
@@ -72,7 +86,6 @@
                 @endforeach
             </tbody>
         </table>
-
     </div>
     <div class="card-footer">
         {{ $products->links('pagination::bootstrap-5') }}

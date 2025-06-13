@@ -14,7 +14,7 @@
     <a href="#" class="brand-link">
         <img src="{{ asset('templates/dist/img/logo-cheva.jpg') }}" alt="Cheva Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Chevalier lab</span>
+        <span class="brand-text font-weight-light">Chevalier Lab</span>
     </a>
 
     <!-- Sidebar -->

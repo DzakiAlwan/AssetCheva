@@ -16,20 +16,19 @@
             'icon' => 'fas fa-th',
         ],
         (object) [
-            'title' => 'Peminjam Barang',
-            'path' => 'peminjam',
+            'title' => 'Peminjaman Barang',
+            'path' => 'borrowings',
             'icon' => 'fas fa-th',
         ],
     ];
 @endphp
-
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
         <img src="{{ asset('templates/dist/img/logo-cheva.jpg') }}" alt="Cheva Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand  -text font-weight-light">Chevalier lab</span>
+        <span class="brand-text font-weight-light">Chevalier Lab</span>
     </a>
 
     <!-- Sidebar -->
@@ -67,11 +66,10 @@
                 @foreach ($menus as $menu)
                     <li class="nav-item">
                         <a href="{{ $menu->path[0] !== '/' ? '/' . $menu->path : $menu->path }}"
-                            class="nav-link {{ request()->path() === $menu->path ? 'active' : '' }}">
+                            class="nav-link {{ request()->is($menu->path) ? 'active' : '' }}">
                             <i class="nav-icon {{ $menu->icon }}"></i>
                             <p>
                                 {{ $menu->title }}
-                                {{-- <span class="right badge badge-danger">New</span> --}}
                             </p>
                         </a>
                     </li>

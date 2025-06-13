@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aplikasi Inventaris Cheva
+    <title>Inventaris Barang Lab Chevalier
     </title>
 
     <!-- Google Font: Source Sans Pro -->

@@ -1,6 +1,6 @@
 <div class="modal fade" id="modal-delete-{{ $product->id }}">
     <div class="modal-dialog">
-        <form action="/categories/{{ $product->id }}" method="post">
+        <form action="/products/{{ $product->id }}" method="post">
             @csrf
             @method('DELETE')
             <div class="modal-content">
@@ -11,15 +11,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Apakah anda yakin ingin menghapus ini???</p>
+                    <p>Apakah Anda yakin ingin menghapus produk ini?</p>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="sumbit" class="btn btn-outline-danger">Yaaa!!!</button>
+                    <button type="submit" class="btn btn-outline-danger">Yaa!!</button>
                 </div>
             </div>
         </form>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
