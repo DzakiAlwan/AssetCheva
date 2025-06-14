@@ -28,6 +28,24 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="phone_number" class="form-label">Nomor HP</label>
+                    <input type="text" name="phone_number" id="phone_number"
+                        class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number') }}">
+                    @error('phone_number')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="class" class="form-label">Kelas</label>
+                    <input type="text" name="class" id="class"
+                        class="form-control @error('class') is-invalid @enderror" value="{{ old('class') }}">
+                    @error('class')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+
 
                 <div class="form-group">
                     <label for="product_id" class="form-label">Barang yang Dipinjam</label>

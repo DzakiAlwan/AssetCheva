@@ -33,38 +33,25 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Masuk untuk memulai aplikasi</p>
 
-                <form action="/login" method="post">
+                <form method="POST" action="{{ route('login') }}">
                     @csrf
-                    @method('POST')
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                            placeholder="Email">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                        @error('email')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+
+                    <!-- Email & Password Field -->
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" required autofocus>
                     </div>
 
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Password"
-                            id="password">
-                        <div class="input-group-append show-password">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock" id="password-lock"></span>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
                     </div>
-                     @error('password')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                    <div class="col-12">
+
+                    <div class="col-12 mt-3">
                         <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                     </div>
                 </form>
+
                 <p class="mb-0 mt-3">
                     <a href="/register" class="text-center">Register a new membership</a>
                 </p>

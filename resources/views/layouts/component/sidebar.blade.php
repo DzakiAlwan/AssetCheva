@@ -20,6 +20,11 @@
             'path' => 'borrowings',
             'icon' => 'fas fa-th',
         ],
+        (object) [
+            'title' => 'Tambah User',
+            'path' => 'addUser',
+            'icon' => 'fas fa-th',
+        ],
     ];
 @endphp
 

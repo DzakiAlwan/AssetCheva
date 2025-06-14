@@ -4,73 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Borrowing;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class BorrowingController extends Controller
 {
+    private function checkAuthorization()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu');
+        }
+
+        $user = Auth::user();
+        if (!in_array($user->role, ['Admin', 'Dosen'])) {
+            abort(403, 'Akses ditolak. Hanya Admin dan Dosen yang diizinkan');
+        }
+    }
+
     public function index()
     {
-        // Ambil semua data peminjaman dan relasikan dengan produk
+        $this->checkAuthorization();
         $borrowings = Borrowing::with('product')->paginate(10);
         return view('pages.borrowings.index', compact('borrowings'));
     }
 
     public function create()
     {
-        // Ambil semua produk yang tersedia
+        $this->checkAuthorization();
         $products = Product::all();
         return view('pages.borrowings.create', compact('products'));
     }
 
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'borrower_name' => 'required|string|max:255',
-            'product_id' => 'required|exists:products,id', // Validasi untuk memastikan produk ada
-            'quantity' => 'required|integer|min:1',
-            'borrow_date' => 'required|date',
-            'return_date' => 'required|date|after_or_equal:borrow_date',
-        ]);
+        $this->checkAuthorization();
 
-        // Ambil produk yang dipilih
-        $product = Product::find($request->product_id);
-
-        // Cek apakah stok barang mencukupi
-        if ($request->quantity > $product->stock) {
-            return back()->withErrors(['quantity' => 'Jumlah barang yang dipinjam melebihi stok yang tersedia.']);
-        }
-
-        // Simpan peminjaman barang
-        $borrowing = new Borrowing();
-        $borrowing->borrower_name = $request->borrower_name;
-        $borrowing->product_id = $request->product_id;
-        $borrowing->quantity = $request->quantity;
-        $borrowing->borrow_date = $request->borrow_date;
-        $borrowing->return_date = $request->return_date;
-        $borrowing->save();
-
-        // Kurangi stok barang
-        $product->stock -= $request->quantity;
-        $product->save();
-
-        // Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('pages.borrowings.index')->with('success', 'Peminjaman barang berhasil disimpan.');
-    }
-
-    public function edit($id)
-    {
-        // Ambil data peminjaman berdasarkan ID
-        $borrowing = Borrowing::findOrFail($id);
-        // Ambil semua produk yang tersedia
-        $products = Product::all();
-
-        return view('pages.borrowings.edit', compact('borrowing', 'products'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        // Validasi input
         $request->validate([
             'borrower_name' => 'required|string|max:255',
             'product_id' => 'required|exists:products,id',
@@ -79,33 +47,65 @@ class BorrowingController extends Controller
             'return_date' => 'required|date|after_or_equal:borrow_date',
         ]);
 
-        // Ambil data peminjaman dan produk yang dipilih
+        $product = Product::find($request->product_id);
+
+        if ($request->quantity > $product->stock) {
+            return back()->withErrors(['quantity' => 'Stok tidak mencukupi']);
+        }
+
+        $borrowing = Borrowing::create($request->all());
+        $product->decrement('stock', $request->quantity);
+
+        return redirect()->route('borrowings.index')->with('success', 'Peminjaman berhasil dibuat');
+    }
+
+    public function edit($id)
+    {
+        $this->checkAuthorization();
+        $borrowing = Borrowing::findOrFail($id);
+        $products = Product::all();
+        return view('pages.borrowings.edit', compact('borrowing', 'products'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->checkAuthorization();
+
+        $request->validate([
+            'borrower_name' => 'required|string|max:255',
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'borrow_date' => 'required|date',
+            'return_date' => 'required|date|after_or_equal:borrow_date',
+        ]);
+
         $borrowing = Borrowing::findOrFail($id);
         $product = Product::find($request->product_id);
 
-        // Cek apakah stok barang mencukupi
+        // Kembalikan stok sebelumnya sebelum update
+        $oldQuantity = $borrowing->quantity;
+        $product->increment('stock', $oldQuantity);
+
         if ($request->quantity > $product->stock) {
-            return back()->withErrors(['quantity' => 'Jumlah barang yang dipinjam melebihi stok yang tersedia.']);
+            return back()->withErrors(['quantity' => 'Stok tidak mencukupi']);
         }
 
-        // Update peminjaman barang
-        $borrowing->borrower_name = $request->borrower_name;
-        $borrowing->product_id = $request->product_id;
-        $borrowing->quantity = $request->quantity;
-        $borrowing->borrow_date = $request->borrow_date;
-        $borrowing->return_date = $request->return_date;
-        $borrowing->save();
+        $borrowing->update($request->all());
+        $product->decrement('stock', $request->quantity);
 
-        // Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('pages.borrowings.index')->with('success', 'Peminjaman berhasil diperbarui.');
+        return redirect()->route('borrowings.index')->with('success', 'Peminjaman berhasil diperbarui');
     }
 
     public function destroy($id)
     {
-        // Hapus data peminjaman berdasarkan ID
+        $this->checkAuthorization();
         $borrowing = Borrowing::findOrFail($id);
-        $borrowing->delete();
 
-        return redirect()->route('pages.borrowings.index')->with('success', 'Peminjaman berhasil dihapus.');
+        // Kembalikan stok saat menghapus
+        $product = $borrowing->product;
+        $product->increment('stock', $borrowing->quantity);
+
+        $borrowing->delete();
+        return redirect()->route('borrowings.index')->with('success', 'Peminjaman berhasil dihapus');
     }
 }

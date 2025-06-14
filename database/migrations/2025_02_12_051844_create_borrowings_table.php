@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('borrowings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('product_id');
+            $table->string('borrower_name', 255);
+            $table->integer('quantity');
+            $table->date('borrow_date');
+            $table->date('return_date');
+            $table->string('class', 100); // Tambahan: kolom kelas
+            $table->string('phone_number', 20); // Tambahan: kolom nomor HP
             $table->timestamps();
         });
     }
