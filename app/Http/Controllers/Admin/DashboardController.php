@@ -60,14 +60,15 @@ class DashboardController extends Controller
     {
         $this->checkAuthorization();
 
+        // Validasi input
         $validated = $request->validate([
-            "name" => "required|min:3",
-            "email" => "required|email|unique:users,email",
+            "name" => "required|min:3|max:255",
+            "email" => "required|email|unique:users,email|max:255",
             "password" => "required|min:8|confirmed",
             "role" => "required|in:Admin,Dosen,Mahasiswa",
-            "nip" => "nullable|string|max:20|unique:users,nip",
+            "nip" => "nullable|string|max:20|unique:users,nip|regex:/^[0-9]+$/",
             "phone" => "nullable|string|max:15",
-            "address" => "nullable|string",
+            "address" => "nullable|string|max:255",
         ], [
             'name.required' => 'Nama lengkap harus diisi!',
             'name.min' => 'Minimal 3 karakter!',
@@ -80,27 +81,36 @@ class DashboardController extends Controller
             'role.required' => 'Role harus dipilih!',
             'role.in' => 'Role tidak valid!',
             'nip.unique' => 'NIP/NIM sudah terdaftar!',
+            'nip.regex' => 'NIP/NIM hanya boleh berisi angka!',
         ]);
 
         // Validasi khusus NIP untuk Dosen/Mahasiswa
-        if (in_array($request->role, ['Dosen', 'Mahasiswa']) && empty($request->nip)) {
-            return back()->withErrors(['nip' => 'NIP/NIM wajib diisi untuk role ini'])->withInput();
+        if (in_array($request->role, ['Dosen', 'Mahasiswa'])) {
+            $request->validate([
+                'nip' => 'required|string|max:20|unique:users,nip|regex:/^[0-9]+$/'
+            ], [
+                'nip.required' => 'NIP/NIM wajib diisi untuk role ini!'
+            ]);
         }
 
         try {
+            // Create user
             User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => $request->role,
-                'nip' => $request->nip,
-                'phone' => $request->phone,
-                'address' => $request->address,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => $validated['role'],
+                'nip' => $validated['nip'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
             ]);
 
             return redirect('/addUser')->with('success', 'User berhasil ditambahkan');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menambahkan user: ' . $e->getMessage())->withInput();
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Gagal menambahkan user. Silakan coba lagi atau hubungi administrator.');
         }
     }
     // Menampilkan form edit

@@ -15,13 +15,12 @@ class Borrowing extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id', // Pastikan ini ada
         'product_id',
-        'borrower_name',
         'quantity',
         'borrow_date',
         'return_date',
-        'class',
-        'phone_number'
+        'status'
     ];
 
     /**
@@ -42,5 +41,9 @@ class Borrowing extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id'); // Sesuaikan dengan nama kolom foreign key Anda
     }
 }

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->enum('role', ['Admin', 'Dosen', 'Mahasiswa']);
-            $table->integer('nim');
-            $table->integer('nip');
+            $table->integer('nim')->nullable();
+            $table->numeric('nip')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

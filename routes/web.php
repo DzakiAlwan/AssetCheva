@@ -9,15 +9,12 @@ use App\Http\Controllers\BorrowingController;
 use App\Http\Middleware\IsLogin;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/login', [AuthController::class, 'loginView'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-
+Route::match(['get', 'post'], '/', [AuthController::class, 'handleLogin'])->name('login');
 Route::get('/register', [AuthController::class, 'registerView']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::get('/', [DashboardController::class, 'index']);
 
 
 Route::middleware(IsLogin::class)->group(function () {
@@ -52,10 +49,10 @@ Route::middleware(IsLogin::class)->group(function () {
     // Rute Peminjaman Barang(ADMIN DAN DOSEN)
     Route::middleware(IsLogin::class)->group(function () {
         Route::get('/borrowings', [BorrowingController::class, 'index'])->name('borrowings.index'); // Daftar peminjaman
-        Route::get('/borrowings/create', [BorrowingController::class, 'create']); // Form tambah peminjaman
-        Route::post('/borrowings/store', [BorrowingController::class, 'store']); // Simpan peminjaman
-        Route::get('/borrowings/edit/{id}', [BorrowingController::class, 'edit']); // Form edit peminjaman
-        Route::put('/borrowings/{id}', [BorrowingController::class, 'update']); // Update peminjaman
+        Route::get('/borrowings/create', [BorrowingController::class, 'create'])->name('borrowings.create'); // Form tambah peminjaman
+        Route::post('/borrowings/store', [BorrowingController::class, 'store'])->name ('borrowings.store'); // Simpan peminjaman
+        Route::get('/borrowings/{borrowing}/edit', [BorrowingController::class, 'edit'])->name('borrowings.edit');
+        Route::put('/borrowings/{borrowing}', [BorrowingController::class, 'update'])->name('borrowings.update');
         Route::delete('/borrowings/{id}', [BorrowingController::class, 'destroy']); // Hapus peminjaman
     });
 

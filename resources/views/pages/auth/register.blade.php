@@ -23,7 +23,7 @@
             <img src="{{ asset('templates/dist/img/logo-cheva.jpg') }}" alt="Cheva Logo"
                 class="brand-image img-circle elevation-3 img-fluid"
                 style="max-width: 120px; height: auto; opacity: .8;">
-            <a href="/register"><b>Inventaris</b>Chevalier</a>
+            <a href="/"><b>Inventaris</b>Chevalier</a>
         </div>
 
         <div class="card">
@@ -32,27 +32,26 @@
 
                 <form action="/register" method="post">
                     @csrf
+
+                    <!-- Field Name -->
                     @error('name')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-
                     <div class="input-group mb-3">
-                        <input type="text" name="name" class="form-control" placeholder="Name"
-                            value="{{ old('name') }}">
+                        <input type="text" name="name" class="form-control" placeholder="Name" value="{{ old('name') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
                             </div>
                         </div>
                     </div>
-                    @csrf
+
+                    <!-- Field Email -->
                     @error('email')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-
                     <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control" placeholder="Email"
-                            value="{{ old('email') }}">
+                        <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -60,38 +59,64 @@
                         </div>
                     </div>
 
+                    <!-- Field Role -->
+                    @error('role')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                    <div class="input-group mb-3">
+                        <select name="role" class="form-control">
+                             <option value="Mahasiswa" {{ old('role') == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                            </select>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user-tag"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Field NIM/NIP -->
+                    @error('nim_nip')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                    <div class="input-group mb-3">
+                        <input type="text" name="nim_nip" class="form-control" placeholder="NIM/NIP" value="{{ old('nim_nip') }}">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-id-card"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Field Password -->
                     @error('password')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-
                     <div class="input-group mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Password"
-                            id="password">
+                        <input type="password" name="password" class="form-control" placeholder="Password" id="password">
                         <div class="input-group-append show-password">
                             <div class="input-group-text">
                                 <span class="fas fa-lock" id="password-lock"></span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Field Confirm Password -->
                     @error('confirm_password')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-
                     <div class="input-group mb-3">
-                        <input type="password" name="confirm_password" class="form-control"
-                            placeholder="Password Confirmation" id="confirm-password">
+                        <input type="password" name="confirm_password" class="form-control" placeholder="Password Confirmation" id="confirm-password">
                         <div class="input-group-append show-confirm-password">
                             <div class="input-group-text">
                                 <span class="fas fa-lock" id="confirm-password-lock"></span>
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
-                        <!-- /.col -->
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block">Register</button>
                         </div>
-                        <!-- /.col -->
                     </div>
                 </form>
             </div>
@@ -107,22 +132,43 @@
     <!-- AdminLTE App -->
     <script src="templates/dist/js/adminlte.min.js"></script>
     <script>
+        // Toggle password visibility
         $('.show-password').on('click', function() {
-            if ($("#password").attr('type') == 'password') {
-                $("#password").attr('type', 'text');
-                $("#password-lock").attr('class', 'fas fa-unlock');
+            const passwordField = $("#password");
+            const icon = $("#password-lock");
+            if (passwordField.attr('type') == 'password') {
+                passwordField.attr('type', 'text');
+                icon.removeClass('fa-lock').addClass('fa-unlock');
             } else {
-                $("#password").attr('type', 'password');
-                $("#password-lock").attr('class', 'fas fa-lock');
+                passwordField.attr('type', 'password');
+                icon.removeClass('fa-unlock').addClass('fa-lock');
             }
         });
+
+        // Toggle confirm password visibility
         $('.show-confirm-password').on('click', function() {
-            if ($("#confirm-password").attr('type') == 'password') {
-                $("#confirm-password").attr('type', 'text');
-                $("#confirm-password-lock").attr('class', 'fas fa-unlock');
+            const confirmField = $("#confirm-password");
+            const icon = $("#confirm-password-lock");
+            if (confirmField.attr('type') == 'password') {
+                confirmField.attr('type', 'text');
+                icon.removeClass('fa-lock').addClass('fa-unlock');
             } else {
-                $("#confirm-password").attr('type', 'password');
-                $("#confirm-password-lock").attr('class', 'fas fa-lock');
+                confirmField.attr('type', 'password');
+                icon.removeClass('fa-unlock').addClass('fa-lock');
+            }
+        });
+
+        // Dynamic NIM/NIP label based on role selection
+        $('select[name="role"]').on('change', function() {
+            const role = $(this).val();
+            const nimNipField = $('input[name="nim_nip"]');
+
+            if (role === 'Dosen') {
+                nimNipField.attr('placeholder', 'NIP');
+            } else if (role === 'Mahasiswa') {
+                nimNipField.attr('placeholder', 'NIM');
+            } else {
+                nimNipField.attr('placeholder', 'NIM/NIP');
             }
         });
     </script>

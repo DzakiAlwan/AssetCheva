@@ -45,6 +45,7 @@
                     <th>Jumlah</th>
                     <th>Tanggal Meminjam</th>
                     <th>Tanggal Pengembalian</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -52,14 +53,29 @@
                 @foreach ($borrowings as $borrowing)
                     <tr>
                         <td>{{ ($borrowings->currentPage() - 1) * $borrowings->perPage() + $loop->index + 1 }}</td>
-                        <td>{{ $borrowing->borrower_name }}</td>
+                        <td>{{ $borrowing->user->name ?? $borrowing->borrower_name ?? 'N/A' }}</td>
                         <td>{{ $borrowing->product->name }}</td>
                         <td>{{ $borrowing->quantity }}</td>
                         <td>{{ $borrowing->borrow_date }}</td>
                         <td>{{ $borrowing->return_date }}</td>
+                        <td>
+                            @if($borrowing->status == 'Dipinjamkan')
+                                <span class="badge badge-warning">Dipinjamkan</span>
+                            @elseif($borrowing->status == 'Dikembalikan')
+                                <span class="badge badge-success">Dikembalikan</span>
+                            @elseif($borrowing->status == 'Hilang')
+                                <span class="badge badge-danger">Hilang</span>
+                            @elseif($borrowing->status == 'Rusak')
+                                <span class="badge badge-danger">Rusak</span>
+                            @else
+                                <span class="badge badge-secondary">{{ $borrowing->status }}</span>
+                            @endif
+                        </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center">
-                                <a href="/borrowings/edit/{{ $borrowing->id }}" class="btn btn-sm btn-warning mr-2">Edit</a>
+                                <a href="{{ route('borrowings.edit', $borrowing->id) }}" class="btn btn-sm btn-warning mr-2">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
                                 <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
                                     data-target="#modal-delete-{{ $borrowing->id }}">
                                     Hapus

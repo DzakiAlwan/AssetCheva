@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // database/migrations/[timestamp]_create_borrowings_table.php
         Schema::create('borrowings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->string('borrower_name', 255);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('quantity');
             $table->date('borrow_date');
             $table->date('return_date');
-            $table->string('class', 100); // Tambahan: kolom kelas
-            $table->string('phone_number', 20); // Tambahan: kolom nomor HP
+            $table->string('status');
             $table->timestamps();
         });
     }

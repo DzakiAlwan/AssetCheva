@@ -23,7 +23,7 @@
             <img src="{{ asset('templates/dist/img/logo-cheva.jpg') }}" alt="Cheva Logo"
                 class="brand-image img-circle elevation-3 img-fluid"
                 style="max-width: 120px; height: auto; opacity: .8;">
-            <a href="/login"><b>Inventaris</b>Chevalier</a>
+                <a href="{{ route('login') }}"><b>Inventaris</b>Chevalier</a>
         </div>
         <!-- /.login-logo -->
         @if (session('error-unauthorized'))
